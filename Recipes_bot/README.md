@@ -4,20 +4,9 @@ A Python package for downloading TikTok videos and managing recipes.
 
 ## Installation
 
-### Using uv (recommended)
-
 ```bash
-# Install the package in development mode
-uv pip install -e .
-
-# Or install from source
-uv pip install .
-```
-
-### Using pip
-
-```bash
-pip install -e .
+# Install the package and dependencies
+uv sync
 ```
 
 ## Usage
@@ -41,8 +30,6 @@ download_tiktok_video("https://www.tiktok.com/@user/video/1234567890", "download
 
 ## Building the package
 
-### Using uv
-
 ```bash
 # Build the package
 uv build
@@ -50,17 +37,10 @@ uv build
 # This will create a wheel and source distribution in the dist/ directory
 ```
 
-### Using pip
-
-```bash
-pip install build
-python -m build
-```
-
 ## Development
 
 Install with development dependencies:
 
 ```bash
-uv pip install -e ".[dev]"
+uv sync --extra dev
 ```
