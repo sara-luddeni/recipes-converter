@@ -32,8 +32,13 @@ def download_tiktok_video(url, output_path="downloads", use_cookies=True):
     if use_cookies:
         # Try to use cookies from browser (Chrome, Firefox, Edge, etc.)
         # This will automatically detect and use cookies from your default browser
-        ydl_opts['cookiesfrombrowser'] = ('chrome',)  # You can change to 'firefox', 'edge', 'safari', etc.
-
+        try:
+            ydl_opts['cookiesfrombrowser'] = ('chrome',)  # You can change to 'firefox', 'edge', 'safari', etc.
+        except Exception:
+            # If cookies can't be extracted, continue without them
+            print("Warning: Could not extract browser cookies, continuing without cookies...")
+            pass
+        
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             # Extract info first to show video details
