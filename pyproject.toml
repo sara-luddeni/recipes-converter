@@ -9,6 +9,8 @@ description = "TikTok video downloader and recipes bot"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
+    "openai>=2.2.0",
+    "openai-whisper>=20231117",
     "playwright>=1.48.0",
     "requests>=2.32.4",
     "yt-dlp>=2023.12.30",
