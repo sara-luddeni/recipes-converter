@@ -12,10 +12,30 @@ from recipes_bot.downloaders.tiktok import TikTokDownloader
 from recipes_bot.extractors.recipe import extract_recipe_from_video
 from recipes_bot.extractors.models import Recipe
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
+
+class TokenRedactingFormatter(logging.Formatter):
+    def __init__(self, token: str, fmt: str | None = None):
+        super().__init__(fmt)
+        self.token = token
+
+    def format(self, record: logging.LogRecord) -> str:
+        message = super().format(record)
+        if self.token:
+            message = message.replace(self.token, "[REDACTED]")
+        return message
+
+
+def setup_logging(token: str) -> None:
+    formatter = TokenRedactingFormatter(
+        token,
+        fmt="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logging.root.addHandler(handler)
+    logging.root.setLevel(logging.INFO)
+
+
 logger = logging.getLogger(__name__)
 
 TIKTOK_URL_PATTERN = re.compile(
@@ -127,6 +147,8 @@ def main() -> None:
             "TELEGRAM_BOT_TOKEN environment variable is required. "
             "Please set it with your Telegram bot token."
         )
+    
+    setup_logging(token)
     
     application = Application.builder().token(token).build()
     
