@@ -10,8 +10,8 @@ from recipes_bot import TikTokDownloader
 )
 def test_tiktok_downloader():
 
-    tiktok_url = r"https://www.tiktok.com/@frostie014/video/7523906810613402902"
-    tiktok_video = pathlib.Path(__file__).parent.parent / "fixture/7523906810613402902.mp4"
+    tiktok_url = r"https://www.tiktok.com/@mayan_yucateca/video/7535206495110122782"
+    tiktok_video = pathlib.Path(__file__).parent.parent / "fixture/test_video.mp4"
 
     with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_video:
         temp_path = pathlib.Path(temp_video.name)

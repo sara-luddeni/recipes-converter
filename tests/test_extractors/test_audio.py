@@ -25,7 +25,7 @@ def test_ffmpeg_available():
 def test_extract_audio_wav():
     """Test that audio extraction produces a valid WAV file."""
 
-    fixture_video = pathlib.Path(__file__).parent.parent / "fixture/7523906810613402902.mp4"
+    fixture_video = pathlib.Path(__file__).parent.parent / "fixture/test_video.mp4"
     assert fixture_video.exists(), f"Fixture not found! as {str(fixture_video)}"
 
     
@@ -50,7 +50,7 @@ def test_extract_audio_wav_nonexistent_file():
 def test_transcribe_to_chunks():
     """Test that transcription returns valid chunks with timestamps."""
 
-    fixture_video = pathlib.Path(__file__).parent.parent / "fixture/7523906810613402902.mp4"
+    fixture_video = pathlib.Path(__file__).parent.parent / "fixture/test_video.mp4"
     with tempfile.TemporaryDirectory() as tmpdir:
 
         chunks = transcribe_to_chunks(str(fixture_video))
@@ -83,7 +83,7 @@ def test_transcribe_to_chunks_nonexistent_file():
 
 def test_transcribe():
     """Test that transcription returns valid text string."""
-    fixture_video = pathlib.Path(__file__).parent.parent / "fixture/7523906810613402902.mp4"
+    fixture_video = pathlib.Path(__file__).parent.parent / "fixture/test_video.mp4"
 
     with tempfile.TemporaryDirectory() as tmpdir:
 
