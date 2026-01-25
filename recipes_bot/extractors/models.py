@@ -1,7 +1,7 @@
 """Data models for text extraction from videos."""
 
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import List, Literal, Optional
 
 Source = Literal["audio", "ocr"]
 
@@ -15,3 +15,12 @@ class TextChunk:
     end_s: float
     text: str
     confidence: Optional[float] = None
+
+
+@dataclass
+class Recipe:
+    """Structured recipe information extracted from transcript."""
+    
+    title: str
+    ingredients: List[str]
+    instructions: List[str]
