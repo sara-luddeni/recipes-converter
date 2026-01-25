@@ -25,6 +25,7 @@ dev = [
 
 [project.scripts]
 tiktok-downloader = "recipes_bot.tiktok_downloader:main"
+recipes-bot-run = "recipes_bot.bot:main"
 
 [tool.setuptools]
 packages = ["recipes_bot"]
