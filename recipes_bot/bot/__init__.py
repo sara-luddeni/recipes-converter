@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 import re
@@ -85,11 +86,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         
         logger.info("Downloading video from %s", url)
         await status_message.edit_text("Downloading video...")
-        TikTokDownloader.download(url, temp_video_path)
+        await asyncio.to_thread(TikTokDownloader.download, url, temp_video_path)
         
         logger.info("Transcribing and extracting recipe from %s", temp_video_path)
         await status_message.edit_text("Transcribing and extracting recipe...")
-        recipe = extract_recipe_from_video(temp_video_path, "/dev/null")
+        recipe = await asyncio.to_thread(extract_recipe_from_video, temp_video_path, "/dev/null")
         
         logger.info("Successfully extracted recipe: %s", recipe.title)
         formatted_recipe = format_recipe_telegram(recipe)
