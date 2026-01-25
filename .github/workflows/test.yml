@@ -24,3 +24,6 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPEN_AI_TEST_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
