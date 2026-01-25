@@ -1,7 +1,13 @@
 import pathlib
+import os
 import tempfile
+import pytest
 from recipes_bot import TikTokDownloader
 
+@pytest.mark.skipif(
+    os.getenv("GITHUB_ACTIONS") == "true",
+    reason="Skipped in GitHub Actions"
+)
 def test_tiktok_downloader():
 
     tiktok_url = r"https://www.tiktok.com/@frostie014/video/7523906810613402902"
