@@ -1,12 +1,18 @@
 import time
+from pathlib import Path
+
 import requests
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
+
+DOWNLOADS_DIR = Path(__file__).parent.parent.parent.parent / "downloads"
 
 
 class TikTokDownloader:
 
     @staticmethod
     def download(url: str, output: str):
+        if isinstance(output, str) and not Path(output).is_absolute():
+            output = str(DOWNLOADS_DIR / output)
         with sync_playwright() as p:
             browser = p.chromium.launch(
                 headless=True,
