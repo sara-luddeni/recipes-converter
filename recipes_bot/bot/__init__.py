@@ -2,14 +2,11 @@ import asyncio
 import logging
 import os
 import re
-import tempfile
-from pathlib import Path
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-from recipes_bot.downloaders.tiktok import TikTokDownloader
-from recipes_bot.extractors.recipe import extract_recipe_from_video
+from recipes_bot.extractors.recipe import extract_recipe_from_url
 from recipes_bot.extractors.models import Recipe
 
 
@@ -99,18 +96,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "Processing your video... This may take a minute."
     )
     
-    temp_video_path = None
     try:
-        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
-            temp_video_path = temp_file.name
-        
-        logger.info("Downloading video from %s", url)
-        await status_message.edit_text("Downloading video...")
-        await asyncio.to_thread(TikTokDownloader.download, url, temp_video_path)
-        
-        logger.info("Transcribing and extracting recipe from %s", temp_video_path)
-        await status_message.edit_text("Transcribing and extracting recipe...")
-        recipe = await asyncio.to_thread(extract_recipe_from_video, temp_video_path, "/dev/null")
+        logger.info("Downloading and extracting recipe from %s", url)
+        recipe = await asyncio.to_thread(extract_recipe_from_url, url, "/dev/null")
         
         logger.info("Successfully extracted recipe: %s", recipe.title)
         formatted_recipe = format_recipe_telegram(recipe)
@@ -131,13 +119,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             "Sorry, something went wrong while processing your video. "
             "Please try again later."
         )
-    finally:
-        if temp_video_path:
-            try:
-                Path(temp_video_path).unlink(missing_ok=True)
-                logger.debug("Cleaned up temp file %s", temp_video_path)
-            except OSError:
-                logger.warning("Failed to clean up temp file %s", temp_video_path)
 
 
 def main() -> None:

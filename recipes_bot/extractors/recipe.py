@@ -2,6 +2,7 @@
 
 import json
 import os
+import tempfile
 from pathlib import Path
 from typing import Dict, Any
 
@@ -9,6 +10,7 @@ from openai import OpenAI
 
 from .models import Recipe
 from .audio import transcribe
+from ..downloaders.tiktok import TikTokDownloader
 
 
 def extract_recipe(transcript: str, output_path: str, model: str = "gpt-4o-mini") -> Recipe:
@@ -127,6 +129,35 @@ def extract_recipe_from_video(video_path: str, output_path: str, model: str = "g
     """
     transcript = transcribe(video_path)
     return extract_recipe(transcript, output_path, model)
+
+
+def extract_recipe_from_url(url: str, output_path: str, model: str = "gpt-4o-mini") -> Recipe:
+    """
+    Download video from URL, extract recipe, and clean up the temporary video file.
+    
+    Args:
+        url: TikTok video URL to download
+        output_path: Path where the Markdown recipe file will be saved
+        model: OpenAI model to use for extraction (default: gpt-4o-mini)
+        
+    Returns:
+        Recipe object with extracted information
+        
+    Raises:
+        FileNotFoundError: If video download fails
+        ValueError: If transcript is empty or API key is missing
+        RuntimeError: If transcription or extraction fails
+    """
+    temp_video_path = None
+    try:
+        with tempfile.NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
+            temp_video_path = temp_file.name
+        
+        TikTokDownloader.download(url, temp_video_path)
+        return extract_recipe_from_video(temp_video_path, output_path, model)
+    finally:
+        if temp_video_path:
+            Path(temp_video_path).unlink(missing_ok=True)
 
 
 def _format_recipe_as_markdown(recipe: Recipe) -> str:
