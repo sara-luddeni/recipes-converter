@@ -112,7 +112,7 @@ def transcribe_to_chunks(video_path: str) -> List[TextChunk]:
             model = get_whisper_model()
 
             # Transcribe with segments
-            result = model.transcribe(audio_path)
+            result = model.transcribe(audio_path, fp16=False)
 
             # Convert segments to TextChunk objects
             chunks: List[TextChunk] = []
@@ -165,7 +165,7 @@ def transcribe(video_path: str) -> str:
             model = get_whisper_model()
 
             # Transcribe
-            result = model.transcribe(audio_path)
+            result = model.transcribe(audio_path, fp16=False)
 
             # Return full text
             return result.get("text", "").strip()
